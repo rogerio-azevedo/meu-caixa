@@ -22,3 +22,15 @@ model Person {
 
   @@map("persons")
 }
+
+model Product {
+  id          String @id @default(uuid())
+  description String
+  price       Float
+
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  excluded_at DateTime?
+
+  @@map("products")
+}
