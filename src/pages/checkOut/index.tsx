@@ -1,22 +1,6 @@
-import Link from "next/link"
+import Link from 'next/link'
 
 export default function CheckOut() {
-  // useEffect(() => {
-  //   const body = {
-  //     name: "Carlos",
-  //     document: "12345678910",
-  //     password: "123456",
-  //   }
-
-  //   fetch("/api/registerPerson", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(body),
-  //   })
-
-  //   console.log("CheckIn")
-  // }, [])
-
   return (
     <div className="w-screen h-screen px-8 justify-center items-center mt-8">
       <Link

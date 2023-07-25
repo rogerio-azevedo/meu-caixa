@@ -1,5 +1,5 @@
-import PageWrapper from "@/components/PageWrapper"
-import Link from "next/link"
+import PageWrapper from '@/components/PageWrapper'
+import Link from 'next/link'
 
 export default function Credit() {
   return (

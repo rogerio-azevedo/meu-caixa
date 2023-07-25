@@ -1,5 +1,5 @@
-import { ActionMeta, GroupBase, OptionsOrGroups, Props } from "react-select"
-import Select from "react-select"
+import { ActionMeta, GroupBase, OptionsOrGroups, Props } from 'react-select'
+import Select from 'react-select'
 
 type OptionType = { label: string; value: string }
 
@@ -9,7 +9,7 @@ type selectLabel = {
 
 type OnChange = (
   option: OptionType | null | unknown,
-  actionMeta: ActionMeta<unknown>
+  actionMeta: ActionMeta<unknown>,
 ) => void | undefined
 
 interface SelectProps extends Props {
@@ -51,7 +51,7 @@ export const SelectPerson: React.FC<SelectProps> = ({
       <Select
         maxMenuHeight={130}
         placeholder={placeholder}
-        defaultValue={selected ? selected : ""}
+        defaultValue={selected ? selected : ''}
         isLoading={!!loading}
         options={options}
         isClearable
