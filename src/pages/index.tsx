@@ -5,8 +5,8 @@ import PageWrapper from '@/components/PageWrapper'
 import { useSession } from 'next-auth/react'
 
 export default function Home() {
-  const { data } = useSession()
-  console.log(data)
+  const { status, data } = useSession()
+
   return (
     <PageWrapper>
       <div className="flex w-full flex-col justify-between py-8">
@@ -14,7 +14,7 @@ export default function Home() {
           <div className="flex flex-col justify-center items-center pt-16">
             <h1 className="text-slate-700 text-2xl">Sejam muito bem vindo!</h1>
             <h1 className="text-blue-500 font-bold text-xl">
-              {data?.user?.name}
+              {data?.user?.name ?? ''}
             </h1>
           </div>
 
@@ -30,12 +30,16 @@ export default function Home() {
 
         <div className="flex flex-row mt-32 justify-center">
           <Link href="/checkIn">Check In</Link>
-          <div className="mx-3">|</div>
-          <Link href="/persons">Persons</Link>
-          <div className="mx-3">|</div>
-          <Link href="/credit">Crédito</Link>
-          <div className="mx-3">|</div>
-          <Link href="/checkOut">Caixa</Link>
+          {status == 'authenticated' && (
+            <>
+              <div className="mx-3">|</div>
+              <Link href="/persons">Persons</Link>
+              <div className="mx-3">|</div>
+              <Link href="/credit">Crédito</Link>
+              <div className="mx-3">|</div>
+              <Link href="/checkOut">Caixa</Link>
+            </>
+          )}
         </div>
       </div>
     </PageWrapper>
