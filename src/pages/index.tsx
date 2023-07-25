@@ -1,36 +1,33 @@
-import { Inter } from "next/font/google"
 import Link from "next/link"
 import { GetStaticProps } from "next/types"
 import { prisma } from "../lib/prisma"
+import PageWrapper from "@/components/PageWrapper"
 
-const inter = Inter({ subsets: ["latin"] })
-
-export default function Home({ persons }: any) {
-  console.log(persons)
-
+export default function Home() {
   return (
-    <main
-      className={`flex flex-1 items-center justify-center bg-white ${inter.className}`}
-    >
-      <div className="flex max-w-3xl items-center justify-center">
-        <div className="flex flex-col w-[800px] h-96 bg-slate-300">
-          <h1>Familia Barbosa</h1>
+    <PageWrapper>
+      <div className="flex w-full flex-col justify-between py-8">
+        <div className="">
+          <div className="flex justify-center items-center pt-16">
+            <h1 className="text-slate-700 text-2xl">Sejam muito bem vindos!</h1>
+          </div>
 
-          <Link href="/checkIn">Check In</Link>
-
-          <div>
-            {persons?.map((person: any) => (
-              <div key={person.id}>
-                <h4>{person.name}</h4>
-                <h4>{person.document}</h4>
-              </div>
-            ))}
+          <div className="flex justify-center mt-8">
+            <p className="text-slate-600 text-center">
+              Ao 8º encontro anual da família Barbosa da Silveira
+            </p>
           </div>
         </div>
 
-        <Link href="/checkIn">CheckIn</Link>
+        <div className="flex flex-row mt-32 justify-center">
+          <Link href="/checkIn">Check In</Link>
+          <div className="mx-3">|</div>
+          <Link href="/persons">Persons</Link>
+          <div className="mx-3">|</div>
+          <Link href="/credit">Meu Crédito</Link>
+        </div>
       </div>
-    </main>
+    </PageWrapper>
   )
 }
 
