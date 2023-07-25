@@ -55,6 +55,7 @@ model Credit {
 
   product Product @relation(fields: [productId], references: [id])
   person  Person  @relation(fields: [personId], references: [id])
+  Log     Log[]
 
   @@map("credits")
 }
@@ -62,14 +63,16 @@ model Credit {
 model Log {
   id                String    @id @default(uuid())
   description       String
-  personId          String?
-  createdByPersonId String?
+  personId          String
+  createdByPersonId String
+  creditId          String
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
   excluded_at       DateTime?
 
-  CreatedBy Person? @relation("createdBy", fields: [createdByPersonId], references: [id])
-  Person    Person? @relation("person", fields: [personId], references: [id])
+  Credit    Credit @relation(fields: [creditId], references: [id])
+  CreatedBy Person @relation("createdBy", fields: [createdByPersonId], references: [id])
+  Person    Person @relation("person", fields: [personId], references: [id])
 
   @@map("logs")
 }

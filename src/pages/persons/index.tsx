@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { GetStaticProps } from "next/types"
-import { prisma } from "../../lib/prisma"
-import PageWrapper from "@/components/PageWrapper"
+import Link from 'next/link'
+import { GetStaticProps } from 'next/types'
+import { prisma } from '../../lib/prisma'
+import PageWrapper from '@/components/PageWrapper'
 
 export default function Persons({ persons }: any) {
   return (
@@ -14,28 +14,22 @@ export default function Persons({ persons }: any) {
             <table className="table-fixed border border-slate-500">
               <thead>
                 <tr>
-                  <th className="border-collapse border border-slate-500 px-2">
+                  <th className="border-collapse border border-slate-500 px-4">
                     Nome
                   </th>
-                  <th className="border-collapse border border-slate-500 px-2">
+                  <th className="border-collapse border border-slate-500 px-4">
                     Documento
-                  </th>
-                  <th className="border-collapse border border-slate-500 px-2">
-                    Telefone
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {persons?.map((person: any) => (
                   <tr key={person.id}>
-                    <td className="border-collapse border border-slate-500 px-2">
+                    <td className="border-collapse border border-slate-500 px-4">
                       {person.name}
                     </td>
-                    <td className="border-collapse border border-slate-500  px-2">
+                    <td className="border-collapse border border-slate-500  px-4">
                       {person.document}
-                    </td>
-                    <td className="border-collapse border border-slate-500  px-2">
-                      {person.phone}
                     </td>
                   </tr>
                 ))}
@@ -61,7 +55,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const persons = await prisma.person.findMany()
 
   // Convert the Date object to a string representation
-  const serializedPersons = persons.map((person) => ({
+  const serializedPersons = persons.map(person => ({
     ...person,
     created_at: person.created_at.toISOString(),
     updated_at: person.updated_at.toISOString(),
