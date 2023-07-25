@@ -10,9 +10,11 @@ type WrapperProps = {
 const PageWrapper = ({ children }: WrapperProps) => {
   return (
     <div
-      className={`flex flex-1 items-center justify-center px-8 ${inter.className}`}
+      className={`flex flex-1 items-center justify-center px-4 ${inter.className}`}
     >
-      <div className="flex flex-1 max-w-3xl h-[100dvh]">{children}</div>
+      <div className="flex flex-1 max-w-[480px] h-[100dvh] bg-white">
+        {children}
+      </div>
     </div>
   )
 }

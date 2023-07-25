@@ -1,11 +1,7 @@
-import { ActionMeta, GroupBase, OptionsOrGroups, Props } from 'react-select'
+import { ActionMeta, Props } from 'react-select'
 import Select from 'react-select'
 
 type OptionType = { label: string; value: string }
-
-type selectLabel = {
-  label: string
-}
 
 type OnChange = (
   option: OptionType | null | unknown,
@@ -14,23 +10,21 @@ type OnChange = (
 
 interface SelectProps extends Props {
   onChange: OnChange
-  selected?: OptionType
-  loading: boolean
-  props?: Props
-  options: OptionsOrGroups<unknown, GroupBase<unknown>>
-  placeholder: string
-  isDisabled?: boolean
-  value?: unknown
 }
 
-export const SelectPerson: React.FC<SelectProps> = ({
-  onChange,
-  loading,
-  options,
-  selected,
-  placeholder,
-  ...rest
-}) => {
+export const SelectPerson: React.FC<SelectProps> = ({ onChange }) => {
+  const loading = false
+  const options = [
+    {
+      label: 'João',
+      value: '1',
+    },
+    {
+      label: 'Maria',
+      value: '2',
+    },
+  ]
+
   if (loading) {
     return (
       <div className="w-full min-w-[175px] min-[1080px]:max-w-[250px] min-[1080px]:w-[250px]">
@@ -50,13 +44,11 @@ export const SelectPerson: React.FC<SelectProps> = ({
     <div className="w-full min-w-[175px] min-[1080px]:max-w-[250px] min-[1080px]:w-[250px]">
       <Select
         maxMenuHeight={130}
-        placeholder={placeholder}
-        defaultValue={selected ? selected : ''}
+        placeholder="Escolha uma pessoa"
         isLoading={!!loading}
         options={options}
         isClearable
         onChange={onChange}
-        {...rest}
       />
     </div>
   )
