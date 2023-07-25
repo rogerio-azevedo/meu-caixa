@@ -15,10 +15,17 @@ model Person {
   name     String
   document String? @unique
   password String
+  isAdmin  Boolean @default(false)
 
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   excluded_at DateTime?
+  creditId    String?
+
+  Credit Credit[]
+
+  CreatedBy Log[] @relation("createdBy")
+  Person    Log[] @relation("person")
 
   @@map("persons")
 }
@@ -31,6 +38,38 @@ model Product {
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   excluded_at DateTime?
+  creditId    String?
+  Credit      Credit[]
 
   @@map("products")
+}
+
+model Credit {
+  id          String    @id @default(uuid())
+  amount      Int
+  productId   String
+  personId    String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  excluded_at DateTime?
+
+  product Product @relation(fields: [productId], references: [id])
+  person  Person  @relation(fields: [personId], references: [id])
+
+  @@map("credits")
+}
+
+model Log {
+  id                String    @id @default(uuid())
+  description       String
+  personId          String?
+  createdByPersonId String?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  excluded_at       DateTime?
+
+  CreatedBy Person? @relation("createdBy", fields: [createdByPersonId], references: [id])
+  Person    Person? @relation("person", fields: [personId], references: [id])
+
+  @@map("logs")
 }

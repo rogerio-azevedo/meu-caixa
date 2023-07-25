@@ -24,7 +24,9 @@ export default function Home() {
           <div className="mx-3">|</div>
           <Link href="/persons">Persons</Link>
           <div className="mx-3">|</div>
-          <Link href="/credit">Meu Crédito</Link>
+          <Link href="/credit">Crédito</Link>
+          <div className="mx-3">|</div>
+          <Link href="/checkOut">Caixa</Link>
         </div>
       </div>
     </PageWrapper>
