@@ -1,7 +1,8 @@
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import Link from 'next/link'
 import Router from 'next/router'
+import { Toast } from '@/components/Toast'
+import BottomMenu from '@/components/BottomMenu'
 
 type FormValues = {
   name: string
@@ -10,9 +11,8 @@ type FormValues = {
 }
 
 export default function CheckIn() {
-  let { status } = useSession()
-
   let { register, handleSubmit } = useForm<FormValues>()
+  const { status } = useSession()
 
   async function login(data: FormValues) {
     let signInRes = await signIn('credentials', {
@@ -25,7 +25,11 @@ export default function CheckIn() {
     if (signInRes?.ok === true) {
       Router.push('/')
     } else {
-      alert('Erro no login, cheque suas credenciais')
+      return Toast({
+        isSuccessToast: false,
+        message: 'Erro no login, cheque suas credenciais',
+        time: 2000,
+      })
     }
   }
 
@@ -37,7 +41,11 @@ export default function CheckIn() {
     })
 
     if ((await res.text()) == 'invalid_document') {
-      alert('O CPF provido é inválido')
+      return Toast({
+        isSuccessToast: false,
+        message: 'O CPF provido é inválido',
+        time: 2000,
+      })
     } else {
       await login(data)
     }
@@ -106,12 +114,7 @@ export default function CheckIn() {
           </button>
         )}
 
-        <Link
-          href="/"
-          className="w-full bg-slate-500 hover:bg-slate-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Voltar
-        </Link>
+        <BottomMenu />
       </div>
     </form>
   )

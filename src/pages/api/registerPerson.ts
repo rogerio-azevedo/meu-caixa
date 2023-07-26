@@ -11,7 +11,6 @@ export default async function handler(
   const { name, document, password } = req.body
 
   if (!verifyDocument(document)) {
-    console.log(document)
     return res.status(400).send('invalid_document')
   }
 
@@ -28,15 +27,13 @@ export default async function handler(
 
   const hashedPassword = await bcrypt.hash(password, 10)
 
-  const register = await prisma.person.create({
+  await prisma.person.create({
     data: {
       name,
       document,
       password: hashedPassword,
     },
   })
-
-  console.log('🚀 ~ file: registerPerson.ts:24 ~ register:', register)
 
   res.status(200).json('ok')
 }

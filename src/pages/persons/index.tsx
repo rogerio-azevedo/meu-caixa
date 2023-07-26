@@ -1,7 +1,7 @@
-import Link from 'next/link'
 import { GetStaticProps } from 'next/types'
 import { prisma } from '../../lib/prisma'
 import PageWrapper from '@/components/PageWrapper'
+import BottomMenu from '@/components/BottomMenu'
 
 export default function Persons({ persons }: any) {
   return (
@@ -39,12 +39,7 @@ export default function Persons({ persons }: any) {
         </div>
 
         <div className="flex w-full">
-          <Link
-            href="/"
-            className="w-full mt-2 bg-slate-500 hover:bg-slate-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Voltar
-          </Link>
+          <BottomMenu />
         </div>
       </div>
     </PageWrapper>

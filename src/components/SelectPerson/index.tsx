@@ -1,5 +1,6 @@
+import dynamic from 'next/dynamic'
 import { ActionMeta, GroupBase, OptionsOrGroups, Props } from 'react-select'
-import Select from 'react-select'
+const Select = dynamic(() => import('react-select'), { ssr: false })
 
 type OptionType = { label: string; value: string }
 

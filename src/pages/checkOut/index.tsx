@@ -1,6 +1,8 @@
 import { SelectPerson } from '@/components/SelectPerson'
-import Link from 'next/link'
+import { Counter } from '@/components/Counter'
 import { useEffect, useState } from 'react'
+import { Toast } from '@/components/Toast'
+import BottomMenu from '@/components/BottomMenu'
 
 type OptionType = { label: string; value: string }
 
@@ -24,6 +26,12 @@ export default function CheckOut() {
     Record<string, { id: string; description: string; amount: number }>
   >({})
 
+  const [selectKey, setSelectKey] = useState(0)
+
+  function clearSelect() {
+    setSelectKey(selectKey + 1)
+  }
+
   useEffect(() => {
     fetch('/api/persons').then(async res => {
       setPersons(await res.json())
@@ -40,11 +48,19 @@ export default function CheckOut() {
 
   async function handleUpdate() {
     if (selectedPersonId == undefined) {
-      return alert('Escolha alguma pessoa primeiro')
+      return Toast({
+        isSuccessToast: false,
+        message: 'Escolha alguma pessoa primeiro',
+        time: 2000,
+      })
     }
 
     if (Object.values(productsToBuy).length == 0) {
-      return alert('Escolha algum produto primeiro')
+      return Toast({
+        isSuccessToast: false,
+        message: 'Escolha algum produto primeiro',
+        time: 2000,
+      })
     }
 
     let res = await fetch('/api/checkout', {
@@ -58,12 +74,32 @@ export default function CheckOut() {
     if (res.status == 200) {
       setSelectedPersonId(undefined)
       setProductsToBuy({})
+
+      clearSelect()
+
+      return Toast({
+        isSuccessToast: true,
+        message: 'Pedido realizado com sucesso',
+        time: 2000,
+      })
     } else {
-      alert('Erro')
+      return Toast({
+        isSuccessToast: false,
+        message: 'Erro',
+        time: 2000,
+      })
     }
   }
 
   function incrementProductToBuy(product: Product, amount: number) {
+    if (!selectedPersonId) {
+      return Toast({
+        isSuccessToast: false,
+        message: 'Selecione uma pessoa primeiro',
+        time: 2000,
+      })
+    }
+
     if (productsToBuy[product.id]) {
       productsToBuy[product.id].amount += amount
 
@@ -71,6 +107,14 @@ export default function CheckOut() {
         delete productsToBuy[product.id]
       }
     } else {
+      if (amount <= 0) {
+        return Toast({
+          isSuccessToast: false,
+          message: 'Não é possível remover créditos por aqui',
+          time: 2000,
+        })
+      }
+
       productsToBuy[product.id] = {
         amount,
         description: product.description,
@@ -95,11 +139,14 @@ export default function CheckOut() {
 
   const totalProductsPrice = getTotalProductsPrice()
 
+  //const [appStateVisible, setAppStateVisible] = useState(Date.now())
+
   return (
     <div className="flex flex-1 flex-col px-8 justify-center items-center mt-8 gap-4">
       <h1 className="mb-8">Lançamento de Pedido</h1>
 
       <SelectPerson
+        key={selectKey}
         options={persons.map(person => ({
           label: person.name,
           value: person.id,
@@ -115,49 +162,44 @@ export default function CheckOut() {
             className="flex w-full justify-between items-center"
             key={product.id}
           >
-            <p>
-              {product.description} (R${product.price})
+            <p className="text-sm">
+              {product.description} (
+              {product.price.toLocaleString('pt-br', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+              )
             </p>
-            <div className="flex justify-between items-center w-fit gap-8">
-              <button
-                className="text-4xl"
-                onClick={() => incrementProductToBuy(product, -1)}
-              >
-                -
-              </button>
-              <p className="font-bold">
-                {Object.values(productsToBuy).find(p => p.id == product.id)
-                  ?.amount ?? 0}
-              </p>
-              <button
-                className="text-4xl"
-                onClick={() => incrementProductToBuy(product, +1)}
-              >
-                +
-              </button>
-            </div>
+            <Counter
+              increment={count => {
+                incrementProductToBuy(product, count)
+              }}
+              amount={
+                Object.values(productsToBuy).find(p => p.id == product.id)
+                  ?.amount ?? 0
+              }
+            ></Counter>
           </div>
         ))}
       </div>
 
-      {totalProductsPrice > 0 && (
-        <p>Total adicionado: R${totalProductsPrice}</p>
-      )}
+      <p>
+        Total adicionado:{' '}
+        {totalProductsPrice.toLocaleString('pt-br', {
+          style: 'currency',
+          currency: 'BRL',
+        })}
+      </p>
 
       <div className="flex flex-col gap-2 w-full">
         <button
           className="w-full mt-8 bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={handleUpdate}
         >
-          Atualizar
+          Efetuar pedido
         </button>
 
-        <Link
-          href="/"
-          className="w-full bg-slate-500 hover:bg-slate-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Voltar
-        </Link>
+        <BottomMenu />
       </div>
     </div>
   )

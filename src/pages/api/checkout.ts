@@ -23,24 +23,33 @@ export default async function handler(
 
   const createdByPersonId = token.sub
 
-  await prisma.$transaction([
-    prisma.credit.createMany({
-      data: products.map(product => ({
-        personId,
-        productId: product.id,
-        amount: product.amount,
-      })),
-    }),
-    prisma.log.createMany({
-      data: products.map(product => ({
-        description: `${Math.abs(product.amount)} ${product.description} ${
-          product.amount > 0 ? 'adicionados' : 'removidos'
-        }`,
-        personId,
-        createdByPersonId,
-      })),
-    }),
-  ])
+  if (!createdByPersonId) return console.log('Id is undefined')
+
+  createdByPersonId
+
+  if (createdByPersonId) {
+    products.map(async product => {
+      await prisma.credit.create({
+        data: {
+          personId,
+          productId: product.id,
+          amount: product.amount,
+
+          Log: {
+            create: [
+              {
+                description: `${Math.abs(product.amount)} ${
+                  product.description
+                } ${product.amount > 0 ? 'adicionados' : 'removidos'}`,
+                personId,
+                createdByPersonId,
+              },
+            ],
+          },
+        },
+      })
+    })
+  }
 
   res.status(200).json('ok')
 }

@@ -1,11 +1,9 @@
-import Link from 'next/link'
-import { GetStaticProps } from 'next/types'
-import { prisma } from '../lib/prisma'
 import PageWrapper from '@/components/PageWrapper'
 import { useSession } from 'next-auth/react'
+import BottomMenu from '@/components/BottomMenu'
 
 export default function Home() {
-  const { status, data } = useSession()
+  const { data } = useSession()
 
   return (
     <PageWrapper>
@@ -28,36 +26,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex flex-row mt-32 justify-center">
-          <Link href="/checkIn">Check In</Link>
-          {status == 'authenticated' && (
-            <>
-              <div className="mx-3">|</div>
-              <Link href="/persons">Persons</Link>
-              <div className="mx-3">|</div>
-              <Link href="/credit">Crédito</Link>
-              <div className="mx-3">|</div>
-              <Link href="/checkOut">Caixa</Link>
-            </>
-          )}
-        </div>
+        <BottomMenu />
       </div>
     </PageWrapper>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const persons = await prisma.person.findMany()
-
-  // Convert the Date object to a string representation
-  const serializedPersons = persons.map(person => ({
-    ...person,
-    created_at: person.created_at.toISOString(),
-    updated_at: person.updated_at.toISOString(),
-  }))
-
-  return {
-    props: { persons: serializedPersons },
-    revalidate: 10,
-  }
 }
