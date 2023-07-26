@@ -1,4 +1,4 @@
-import { ActionMeta, Props } from 'react-select'
+import { ActionMeta, GroupBase, OptionsOrGroups, Props } from 'react-select'
 import Select from 'react-select'
 
 type OptionType = { label: string; value: string }
@@ -10,20 +10,11 @@ type OnChange = (
 
 interface SelectProps extends Props {
   onChange: OnChange
+  options: OptionsOrGroups<unknown, GroupBase<unknown>>
 }
 
-export const SelectPerson: React.FC<SelectProps> = ({ onChange }) => {
+export const SelectPerson: React.FC<SelectProps> = ({ options, onChange }) => {
   const loading = false
-  const options = [
-    {
-      label: 'João',
-      value: '1',
-    },
-    {
-      label: 'Maria',
-      value: '2',
-    },
-  ]
 
   if (loading) {
     return (
