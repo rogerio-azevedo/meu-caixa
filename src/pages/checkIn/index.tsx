@@ -79,7 +79,7 @@ export default function CheckIn() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="document"
           type="text"
-          placeholder="CPF"
+          placeholder="000.000.00-00"
           {...register('document')}
         />
       </div>

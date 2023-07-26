@@ -15,6 +15,9 @@ export default async function handler(
       Person: true,
       CreatedBy: true,
     },
+    orderBy: {
+      created_at: 'desc',
+    },
   })
 
   const formatted = logs.map(log => ({
