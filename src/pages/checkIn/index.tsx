@@ -91,13 +91,13 @@ export default function CheckIn() {
 
         <div className="flex flex-col w-full">
           {isSignUp && (
-            <TextInput id='name' label='Nome' placeholder="Nome" register={...register('name')} />
+            <TextInput id='name' label='Nome' placeholder="Nome" register={register} />
           )}
         </div>
 
-        <TextInput id='document' label='CPF' placeholder="000.000.00-00" register={...register('document')} />
+        <TextInput id='document' label='CPF' placeholder="000.000.00-00" register={register} />
 
-        <TextInput id='password' label='Senha' placeholder="Senha" type="password" register={...register('password')} />
+        <TextInput id='password' label='Senha' placeholder="Senha" type="password" register={register} />
 
         <div className="flex flex-col w-full items-center justify-center mt-8 gap-2">
           {isSignUp ? (

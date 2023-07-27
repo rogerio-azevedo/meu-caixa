@@ -1,9 +1,11 @@
+import { UseFormRegister } from 'react-hook-form'
+
 interface TextInputProps {
   id: string
   label: string
   placeholder: string
   type?: string
-  register: any
+  register: UseFormRegister<any>
 }
 
 export function TextInput({ id, label, placeholder, type = 'text', register }: TextInputProps) {
@@ -20,7 +22,7 @@ export function TextInput({ id, label, placeholder, type = 'text', register }: T
         id={id}
         type={type}
         placeholder={placeholder}
-        {...register}
+        {...register(id)}
       />
     </fieldset>
   )
