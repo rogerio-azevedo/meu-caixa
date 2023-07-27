@@ -10,6 +10,7 @@ const Admin = () => {
         <Link href="/persons">Relatórios</Link>
         <Link href="/checkOut">Caixa</Link>
         <Link href="/bar">Bar</Link>
+        <Link href="/">Voltar</Link>
       </div>
     </PageWrapper>
   )

@@ -2,7 +2,8 @@ import { SelectPerson } from '@/components/SelectPerson'
 import { Counter } from '@/components/Counter'
 import { useEffect, useState } from 'react'
 import { Toast } from '@/components/Toast'
-import BottomMenu from '@/components/BottomMenu'
+import BottomAdmin from '@/components/BottomAdmin'
+import PageWrapper from '@/components/PageWrapper'
 
 type OptionType = { label: string; value: string }
 
@@ -142,65 +143,75 @@ export default function CheckOut() {
   //const [appStateVisible, setAppStateVisible] = useState(Date.now())
 
   return (
-    <div className="flex flex-1 flex-col px-8 justify-center items-center mt-8 gap-4">
-      <h1 className="mb-8">Lançamento de Pedido</h1>
+    <PageWrapper>
+      <div className="flex flex-1 flex-col justify-between items-center gap-4">
+        <div className="flex w-full px-4 mt-6 justify-center">
+          <h1 className="text-2xl font-bold text-center">
+            Lançamento de Pedido
+          </h1>
+        </div>
 
-      <SelectPerson
-        key={selectKey}
-        options={persons.map(person => ({
-          label: person.name,
-          value: person.id,
-        }))}
-        onChange={(option: any) =>
-          handlePickPerson(option && (option as OptionType).value)
-        }
-      />
+        <div className="flex w-full px-4">
+          <SelectPerson
+            key={selectKey}
+            options={persons.map(person => ({
+              label: person.name,
+              value: person.id,
+            }))}
+            onChange={(option: any) =>
+              handlePickPerson(option && (option as OptionType).value)
+            }
+          />
+        </div>
 
-      <div className="flex flex-col gap-2 w-full">
-        {products.map(product => (
-          <div
-            className="flex w-full justify-between items-center"
-            key={product.id}
-          >
-            <p className="text-sm">
-              {product.description} (
-              {product.price.toLocaleString('pt-br', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-              )
-            </p>
-            <Counter
-              increment={count => {
-                incrementProductToBuy(product, count)
-              }}
-              amount={
-                Object.values(productsToBuy).find(p => p.id == product.id)
-                  ?.amount ?? 0
-              }
-            ></Counter>
+        <div className="flex flex-col gap-2 w-full px-4">
+          {products.map(product => (
+            <div
+              className="flex w-full justify-between items-center"
+              key={product.id}
+            >
+              <p className="text-sm">
+                {product.description} (
+                {product.price.toLocaleString('pt-br', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+                )
+              </p>
+              <Counter
+                increment={count => {
+                  incrementProductToBuy(product, count)
+                }}
+                amount={
+                  Object.values(productsToBuy).find(p => p.id == product.id)
+                    ?.amount ?? 0
+                }
+              ></Counter>
+            </div>
+          ))}
+        </div>
+
+        <p className="px-4">
+          Total adicionado:{' '}
+          {totalProductsPrice.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          })}
+        </p>
+
+        <div className="flex flex-col gap-4 w-full">
+          <div className="px-4">
+            <button
+              className="w-full mt-8 bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={handleUpdate}
+            >
+              Efetuar pedido
+            </button>
           </div>
-        ))}
+
+          <BottomAdmin />
+        </div>
       </div>
-
-      <p>
-        Total adicionado:{' '}
-        {totalProductsPrice.toLocaleString('pt-br', {
-          style: 'currency',
-          currency: 'BRL',
-        })}
-      </p>
-
-      <div className="flex flex-col gap-2 w-full">
-        <button
-          className="w-full mt-8 bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={handleUpdate}
-        >
-          Efetuar pedido
-        </button>
-
-        <BottomMenu />
-      </div>
-    </div>
+    </PageWrapper>
   )
 }

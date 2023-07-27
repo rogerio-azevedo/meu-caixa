@@ -47,7 +47,7 @@ export default function Credit() {
     <PageWrapper>
       <div className="flex w-full flex-col justify-between">
         <div className="flex items-center px-4">
-          <div className="flex flex-col w-full gap-4 mt-6">
+          <div className="flex flex-col w-full mt-6 justify-center">
             <h1 className="text-2xl font-bold text-center"> Meu Crédito</h1>
 
             <div className="flex flex-row w-full justify-between mt-6">

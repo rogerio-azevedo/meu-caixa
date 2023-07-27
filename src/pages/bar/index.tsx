@@ -1,14 +1,9 @@
 import PageWrapper from '@/components/PageWrapper'
 import { Counter } from '@/components/Counter'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Toast } from '@/components/Toast'
-
-import dynamic from 'next/dynamic'
-import BottomMenu from '@/components/BottomMenu'
-import { useSession } from 'next-auth/react'
-
-const Select = dynamic(() => import('react-select'), { ssr: false })
+import { SelectPerson } from '@/components/SelectPerson'
+import BottomAdmin from '@/components/BottomAdmin'
 
 interface Product {
   id: string
@@ -39,6 +34,8 @@ export default function Bar() {
   >({})
 
   const [selectKey, setSelectKey] = useState(0)
+
+  const totalProductsPrice = 1
 
   function clearSelect() {
     setSelectKey(selectKey + 1)
@@ -150,30 +147,28 @@ export default function Bar() {
 
   return (
     <PageWrapper>
-      <div className="flex w-full flex-col justify-between py-8">
-        <h1> Bar </h1>
+      <div className="flex flex-1 flex-col justify-between items-center gap-4">
+        <div className="flex w-full px-4 mt-6 justify-center">
+          <h1 className="text-2xl font-bold text-center">Bar</h1>
+        </div>
 
-        <div className="w-full min-w-[175px] min-[1080px]:max-w-[250px] min-[1080px]:w-[250px]">
-          <Select
+        <div className="flex w-full px-4">
+          <SelectPerson
             key={selectKey}
-            id="1"
-            maxMenuHeight={130}
-            placeholder="Escolha uma pessoa"
             options={persons.map(person => ({
               label: person.name,
               value: person.id,
             }))}
-            isClearable
             onChange={(option: any) =>
               setSelectedPersonId(option && (option as OptionType).value)
             }
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full px-4">
           {balance?.map(({ id, amount, product }) => (
             <div key={id} className="flex justify-between items-center">
-              <p>
+              <p className="text-sm">
                 {product}: {amount}
               </p>
               <Counter
@@ -195,16 +190,19 @@ export default function Bar() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <button
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleTransaction}
-          >
-            Efetuar transação
-          </button>
-          <button></button>
+        <p className="px-4"></p>
 
-          <BottomMenu />
+        <div className="flex flex-col gap-4 w-full">
+          <div className="px-4">
+            <button
+              className="w-full bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={handleTransaction}
+            >
+              Efetuar transação
+            </button>
+          </div>
+
+          <BottomAdmin />
         </div>
       </div>
     </PageWrapper>

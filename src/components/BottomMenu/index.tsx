@@ -2,13 +2,15 @@ import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
-  FaHistory,
   FaBeer,
   FaHome,
   FaLock,
   FaSignInAlt,
   FaUserAlt,
+  FaFileAlt,
 } from 'react-icons/fa'
+
+import { MdSentimentSatisfiedAlt } from 'react-icons/md'
 
 type WrapperProps = {
   bgColor?: string
@@ -55,7 +57,7 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
                 href="/attractions"
                 className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
               >
-                <FaHistory size={18} color="#fff" />
+                <MdSentimentSatisfiedAlt size={22} color="#fff" />
                 Atrações
               </Link>
             </div>
@@ -65,7 +67,7 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
                 href="/guide"
                 className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
               >
-                <FaHistory size={18} color="#fff" />
+                <FaFileAlt size={18} color="#fff" />
                 Roteiro
               </Link>
             </div>
@@ -88,7 +90,7 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
           <div className="flex flex-col justify-center items-center">
             <Link
               href="/checkIn?signup=false"
-              className="text-white text-sm mt-1"
+              className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
             >
               <FaSignInAlt size={18} color="#fff" />
               Entrar
@@ -98,7 +100,7 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
           <div className="flex flex-col justify-center items-center">
             <Link
               href="/checkIn?signup=true"
-              className="text-white text-sm mt-1"
+              className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
             >
               <FaUserAlt size={18} color="#fff" />
               Registrar

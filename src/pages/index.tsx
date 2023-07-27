@@ -9,9 +9,9 @@ export default function Home() {
 
   return (
     <PageWrapper className="!px-0">
-      <div className="flex w-full flex-col justify-between pt-6">
+      <div className="flex w-full flex-col justify-between">
         <div className="px-4">
-          <div className="flex flex-col justify-center items-center pt-12">
+          <div className="flex flex-col justify-center items-center pt-6">
             <h1 className="text-slate-700 text-2xl">Sejam muito bem vindo!</h1>
             <h1 className="text-blue-500 font-bold text-xl">
               {data?.user?.name ?? ''}
