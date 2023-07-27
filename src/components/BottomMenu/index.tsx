@@ -31,37 +31,52 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
         <>
           <div className="flex gap-8">
             <div className="flex flex-col justify-center items-center">
-              <FaHome size={18} color="#fff" />
-              <Link href="/" className="text-white text-sm mt-1">
+              <Link
+                href="/"
+                className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+              >
+                <FaHome size={18} color="#fff" />
                 Home
               </Link>
             </div>
 
             <div className="flex flex-col justify-center items-center">
-              <FaBeer size={18} color="#fff" />
-              <Link href="/credit" className="text-white text-sm mt-1">
+              <Link
+                href="/credit"
+                className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+              >
+                <FaBeer size={18} color="#fff" />
                 Crédito
               </Link>
             </div>
 
             <div className="flex flex-col justify-center items-center">
-              <FaHistory size={18} color="#fff" />
-              <Link href="/attractions" className="text-white text-sm mt-1">
+              <Link
+                href="/attractions"
+                className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+              >
+                <FaHistory size={18} color="#fff" />
                 Atrações
               </Link>
             </div>
 
             <div className="flex flex-col justify-center items-center">
-              <FaHistory size={18} color="#fff" />
-              <Link href="/guide" className="text-white text-sm mt-1">
+              <Link
+                href="/guide"
+                className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+              >
+                <FaHistory size={18} color="#fff" />
                 Roteiro
               </Link>
             </div>
 
             {isAdmin && (
               <div className="flex flex-col justify-center items-center">
-                <FaLock size={18} color="#fff" />
-                <Link href="/admin" className="text-white text-sm mt-1">
+                <Link
+                  href="/admin"
+                  className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+                >
+                  <FaLock size={18} color="#fff" />
                   Admin
                 </Link>
               </div>
@@ -71,21 +86,21 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
       ) : (
         <div className="flex flex-row gap-8">
           <div className="flex flex-col justify-center items-center">
-            <FaSignInAlt size={18} color="#fff" />
             <Link
               href="/checkIn?signup=false"
               className="text-white text-sm mt-1"
             >
+              <FaSignInAlt size={18} color="#fff" />
               Entrar
             </Link>
           </div>
 
           <div className="flex flex-col justify-center items-center">
-            <FaUserAlt size={18} color="#fff" />
             <Link
               href="/checkIn?signup=true"
               className="text-white text-sm mt-1"
             >
+              <FaUserAlt size={18} color="#fff" />
               Registrar
             </Link>
           </div>
