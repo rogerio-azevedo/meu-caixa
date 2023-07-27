@@ -2,7 +2,11 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import Router from 'next/router'
 import { Toast } from '@/components/Toast'
-import BottomMenu from '@/components/BottomMenu'
+import Image from 'next/image'
+import Brasao from '@/assets/brasao.png'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import PageWrapper from '@/components/PageWrapper'
 
 type FormValues = {
   name: string
@@ -11,11 +15,14 @@ type FormValues = {
 }
 
 export default function CheckIn() {
-  let { register, handleSubmit } = useForm<FormValues>()
+  const { register, handleSubmit } = useForm<FormValues>()
   const { status } = useSession()
 
+  const searchParams = useSearchParams()
+  const isSignUp = JSON.parse(searchParams.get('signup') ?? 'true') as boolean
+
   async function login(data: FormValues) {
-    let signInRes = await signIn('credentials', {
+    const signInRes = await signIn('credentials', {
       name: data.name,
       document: data.document,
       password: data.password,
@@ -34,7 +41,7 @@ export default function CheckIn() {
   }
 
   const onRegister = handleSubmit(async data => {
-    let res = await fetch('/api/registerPerson', {
+    const res = await fetch('/api/registerPerson', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -46,76 +53,111 @@ export default function CheckIn() {
         message: 'O CPF provido é inválido',
         time: 2000,
       })
-    } else {
-      await login(data)
     }
   })
 
-  return (
-    <form className="w-screen px-8 justify-center items-center mt-8">
-      <div className="mb-4">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="name"
-        >
-          Nome
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="name"
-          type="text"
-          placeholder="Nome"
-          {...register('name')}
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="document"
-        >
-          CPF
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="document"
-          type="text"
-          placeholder="000.000.00-00"
-          {...register('document')}
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="password"
-        >
-          Senha
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          placeholder="Senha"
-          {...register('password')}
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center mt-8 gap-2">
-        <button
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={onRegister}
-        >
-          Registrar
-        </button>
-        {status == 'authenticated' && (
-          <button
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={() => signOut()}
-          >
-            Sign out
-          </button>
-        )}
+  const onLogin = handleSubmit(async data => {
+    await login(data)
+  })
 
-        <BottomMenu />
-      </div>
-    </form>
+  return (
+    <PageWrapper>
+      <form className="flex flex-col w-full px-8 justify-center items-center mt-6">
+        <div className="flex justify-center items-center">
+          <Image
+            src={Brasao}
+            width={200}
+            height={200}
+            alt=""
+            className="w-[180px]"
+          />
+        </div>
+        <div className="flex flex-col w-full mb-4">
+          {isSignUp && (
+            <>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-1"
+                htmlFor="name"
+              >
+                Nome
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="name"
+                type="text"
+                placeholder="Nome"
+                {...register('name')}
+              />
+            </>
+          )}
+        </div>
+        <div className="flex flex-col w-full mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-1"
+            htmlFor="document"
+          >
+            CPF
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="document"
+            type="text"
+            placeholder="000.000.00-00"
+            {...register('document')}
+          />
+        </div>
+        <div className="flex flex-col w-full mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-1"
+            htmlFor="password"
+          >
+            Senha
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            placeholder="Senha"
+            {...register('password')}
+          />
+        </div>
+        <div className="flex flex-col w-full items-center justify-center mt-8 gap-2">
+          {isSignUp ? (
+            <>
+              <button
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={onRegister}
+              >
+                Registrar
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={onLogin}
+              >
+                Entrar
+              </button>
+            </>
+          )}
+          {status == 'authenticated' && (
+            <button
+              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={() => signOut()}
+            >
+              Sign out
+            </button>
+          )}
+
+          <Link
+            href="/"
+            className="w-full bg-slate-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center"
+          >
+            Voltar
+          </Link>
+        </div>
+      </form>
+    </PageWrapper>
   )
 }
