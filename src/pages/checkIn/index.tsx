@@ -1,23 +1,29 @@
+import { useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import Router from 'next/router'
+
 import { Toast } from '@/components/Toast'
 import BottomMenu from '@/components/BottomMenu'
 
-type FormValues = {
+import { formatCPForCNPJ } from '@/utils/mask/formatDocument'
+
+export type FormValues = {
   name: string
   document: string
   password: string
 }
 
 export default function CheckIn() {
-  let { register, handleSubmit } = useForm<FormValues>()
+  const { register, handleSubmit, setValue, watch } = useForm<FormValues>()
   const { status } = useSession()
 
+  const formatDocument = watch('document')
+  
   async function login(data: FormValues) {
-    let signInRes = await signIn('credentials', {
+    const signInRes = await signIn('credentials', {
       name: data.name,
-      document: data.document,
+      document: formatDocument.replace(/[^\d]/g, '').trim(),
       password: data.password,
       redirect: false,
     })
@@ -34,10 +40,15 @@ export default function CheckIn() {
   }
 
   const onRegister = handleSubmit(async data => {
+    const newData = {
+      ...data,
+      document: formatDocument.replace(/[^\d]/g, '').trim()
+    }
+    
     let res = await fetch('/api/registerPerson', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(newData),
     })
 
     if ((await res.text()) == 'invalid_document') {
@@ -50,6 +61,10 @@ export default function CheckIn() {
       await login(data)
     }
   })
+
+  useEffect(() => {
+    setValue('document', formatCPForCNPJ(formatDocument))
+  }, [formatDocument, setValue])
 
   return (
     <form className="w-screen px-8 justify-center items-center mt-8">
@@ -68,6 +83,7 @@ export default function CheckIn() {
           {...register('name')}
         />
       </div>
+
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -83,6 +99,7 @@ export default function CheckIn() {
           {...register('document')}
         />
       </div>
+
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -98,6 +115,7 @@ export default function CheckIn() {
           {...register('password')}
         />
       </div>
+
       <div className="flex flex-col items-center justify-center mt-8 gap-2">
         <button
           className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

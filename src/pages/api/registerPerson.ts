@@ -9,6 +9,7 @@ export default async function handler(
   res: NextApiResponse<string>,
 ) {
   const { name, document, password } = req.body
+  console.log("🚀 ~ file: registerPerson.ts:12 ~ document:", document)
 
   if (!verifyDocument(document)) {
     return res.status(400).send('invalid_document')
