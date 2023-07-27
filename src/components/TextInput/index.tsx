@@ -1,18 +1,16 @@
-import { UseFormRegister } from 'react-hook-form'
-
 interface TextInputProps {
   id: string
   label: string
   placeholder: string
   type?: string
-  register: UseFormRegister<any>
+  register: any
 }
 
 export function TextInput({ id, label, placeholder, type = 'text', register }: TextInputProps) {
   return (
-    <fieldset className="mb-4">
+    <fieldset className="flex flex-col w-full mb-4">
       <label
-        className="block text-gray-700 text-sm font-bold mb-2"
+        className="block text-gray-700 text-sm font-bold mb-1"
         htmlFor={id}
       >
         {label}

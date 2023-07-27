@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import Router from 'next/router'
@@ -8,6 +9,9 @@ import Brasao from '@/assets/brasao.png'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import PageWrapper from '@/components/PageWrapper'
+import { TextInput } from '@/components/TextInput'
+
+import { formatCPForCNPJ } from '@/utils/mask/formatDocument'
 
 type FormValues = {
   name: string
@@ -16,8 +20,10 @@ type FormValues = {
 }
 
 export default function CheckIn() {
-  const { register, handleSubmit } = useForm<FormValues>()
+  const { register, handleSubmit, setValue, watch } = useForm<FormValues>()
   const { status } = useSession()
+
+  const formatDocument = watch('document')
 
   const searchParams = useSearchParams()
   const isSignUp = JSON.parse(searchParams.get('signup') ?? 'true') as boolean
@@ -25,7 +31,7 @@ export default function CheckIn() {
   async function login(data: FormValues) {
     const signInRes = await signIn('credentials', {
       name: data.name,
-      document: data.document,
+      document: formatDocument.replace(/[^\d]/g, '').trim(),
       password: data.password,
       redirect: false,
     })
@@ -42,10 +48,15 @@ export default function CheckIn() {
   }
 
   const onRegister = handleSubmit(async data => {
+    const newData = {
+      ...data,
+      document: formatDocument.replace(/[^\d]/g, '').trim()
+    }
+    
     const res = await fetch('/api/registerPerson', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(newData),
     })
 
     if ((await res.text()) == 'invalid_document') {
@@ -61,6 +72,10 @@ export default function CheckIn() {
     await login(data)
   })
 
+  useEffect(() => {
+    setValue('document', formatCPForCNPJ(formatDocument))
+  }, [formatDocument, setValue])
+
   return (
     <PageWrapper>
       <form className="flex flex-col w-full px-8 justify-center items-center mt-6">
@@ -73,55 +88,17 @@ export default function CheckIn() {
             className="w-[180px]"
           />
         </div>
-        <div className="flex flex-col w-full mb-4">
+
+        <div className="flex flex-col w-full">
           {isSignUp && (
-            <>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-1"
-                htmlFor="name"
-              >
-                Nome
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="name"
-                type="text"
-                placeholder="Nome"
-                {...register('name')}
-              />
-            </>
+            <TextInput id='name' label='Nome' placeholder="Nome" register={...register('name')} />
           )}
         </div>
-        <div className="flex flex-col w-full mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-1"
-            htmlFor="document"
-          >
-            CPF
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="document"
-            type="text"
-            placeholder="000.000.00-00"
-            {...register('document')}
-          />
-        </div>
-        <div className="flex flex-col w-full mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-1"
-            htmlFor="password"
-          >
-            Senha
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
-            type="password"
-            placeholder="Senha"
-            {...register('password')}
-          />
-        </div>
+
+        <TextInput id='document' label='CPF' placeholder="000.000.00-00" register={...register('document')} />
+
+        <TextInput id='password' label='Senha' placeholder="Senha" type="password" register={...register('password')} />
+
         <div className="flex flex-col w-full items-center justify-center mt-8 gap-2">
           {isSignUp ? (
             <>
