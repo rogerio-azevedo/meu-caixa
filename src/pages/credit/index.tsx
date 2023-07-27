@@ -45,30 +45,37 @@ export default function Credit() {
 
   return (
     <PageWrapper>
-      <div className="flex w-full flex-col justify-between py-8">
-        <h1 className="text-2xl font-bold"> Meu Crédito</h1>
+      <div className="flex w-full flex-col justify-between">
+        <div className="flex items-center px-4">
+          <div className="flex flex-col w-full gap-4 mt-6">
+            <h1 className="text-2xl font-bold text-center"> Meu Crédito</h1>
 
-        <div className="flex justify-between items-center">
-          <div>
-            {balance?.map(({ id, amount, product }) => (
-              <p key={id}>
-                <span>{product}</span>:
-                <span className="font-bold ml-2">{amount}</span>
-              </p>
-            ))}
-          </div>
+            <div className="flex flex-row w-full justify-between mt-6">
+              <div className="">
+                {balance?.map(({ id, amount, product }) => (
+                  <p key={id}>
+                    <span>{product}</span>:
+                    <span className="font-bold ml-2">{amount}</span>
+                  </p>
+                ))}
+              </div>
 
-          <div>
-            <button
-              onClick={refresh}
-              className="flex justify-center items-center bg-blue-500 p-2 rounded-md"
-            >
-              <FaHistory size={25} color="#fff" />
-            </button>
+              <div>
+                <button
+                  onClick={refresh}
+                  className="flex justify-center items-center bg-blue-500 p-2 rounded-md"
+                >
+                  <FaHistory size={25} color="#fff" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="h-1/2">
+        <div className="h-1/2 px-4 mb-24">
+          <h2 className="text-xl font-bold text-center mb-6">
+            Histórico de transações
+          </h2>
           <ol className="relative border-l border-gray-200 dark:border-gray-700 overflow-y-scroll h-full">
             {logs?.map(({ id, date, description }) => (
               <li className="mb-6 ml-6" key={id}>
@@ -83,10 +90,7 @@ export default function Credit() {
             ))}
           </ol>
         </div>
-
-        <div className="flex">
-          <BottomMenu />
-        </div>
+        <BottomMenu className="flex" />
       </div>
     </PageWrapper>
   )
