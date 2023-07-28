@@ -10,7 +10,7 @@ import {
   FaFileAlt,
 } from 'react-icons/fa'
 
-import { MdSentimentSatisfiedAlt } from 'react-icons/md'
+import { ImSpoonKnife } from 'react-icons/im'
 
 type WrapperProps = {
   bgColor?: string
@@ -57,8 +57,8 @@ const BottomMenu = ({ bgColor, className }: WrapperProps) => {
                 href="/attractions"
                 className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
               >
-                <MdSentimentSatisfiedAlt size={22} color="#fff" />
-                Atrações
+                <ImSpoonKnife size={18} color="#fff" />
+                Cardápio
               </Link>
             </div>
 

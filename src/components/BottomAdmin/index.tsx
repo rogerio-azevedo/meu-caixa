@@ -1,7 +1,13 @@
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { FaCalculator, FaBeer, FaHome, FaCashRegister } from 'react-icons/fa'
+import {
+  FaCalculator,
+  FaBeer,
+  FaHome,
+  FaCashRegister,
+  FaLock,
+} from 'react-icons/fa'
 
 type WrapperProps = {
   bgColor?: string
@@ -9,9 +15,6 @@ type WrapperProps = {
 }
 
 const BottomAdmin = ({ bgColor, className }: WrapperProps) => {
-  const { status, data } = useSession()
-  const isAdmin = data?.user?.isAdmin
-
   return (
     <div
       className={classNames(
@@ -58,6 +61,16 @@ const BottomAdmin = ({ bgColor, className }: WrapperProps) => {
           >
             <FaCalculator size={18} color="#fff" />
             Relatórios
+          </Link>
+        </div>
+
+        <div className="flex flex-col justify-center items-center">
+          <Link
+            href="/admin"
+            className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
+          >
+            <FaLock size={18} color="#fff" />
+            Admin
           </Link>
         </div>
       </div>

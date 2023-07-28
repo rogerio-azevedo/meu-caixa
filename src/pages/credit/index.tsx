@@ -76,7 +76,7 @@ export default function Credit() {
           <h2 className="text-xl font-bold text-center mb-6">
             Histórico de transações
           </h2>
-          <ol className="relative border-l border-gray-200 dark:border-gray-700 overflow-y-scroll h-full">
+          <ol className="relative border-l border-gray-200 dark:border-gray-700 overflow-y-scroll h-full pt-2">
             {logs?.map(({ id, date, description }) => (
               <li className="mb-6 ml-6" key={id}>
                 <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 left-[6px] border border-white dark:bg-gray-700"></div>

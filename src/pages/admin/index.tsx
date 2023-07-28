@@ -1,16 +1,19 @@
+import BottomAdmin from '@/components/BottomAdmin'
+import BottomMenu from '@/components/BottomMenu'
 import PageWrapper from '@/components/PageWrapper'
 import Link from 'next/link'
 
 const Admin = () => {
   return (
     <PageWrapper>
-      <h1>Área de Administração</h1>
+      <div className=" flex flex-col w-full justify-between">
+        <div className="flex flex-1 px-4 mt-6 justify-center">
+          <h1 className="text-2xl font-bold text-center">
+            Painel Administrativo
+          </h1>
+        </div>
 
-      <div className="flex flex-col gap-2 mt-8">
-        <Link href="/persons">Relatórios</Link>
-        <Link href="/checkOut">Caixa</Link>
-        <Link href="/bar">Bar</Link>
-        <Link href="/">Voltar</Link>
+        <BottomAdmin className="flex" />
       </div>
     </PageWrapper>
   )
