@@ -22,7 +22,7 @@ export default async function handler(
 
   const formatted = logs.map(log => ({
     id: log.id,
-    date: log.created_at.toLocaleString(),
+    date: log.created_at.toISOString(),
     description: `${log.description} para ${log.Person.name} pelo ${log.CreatedBy.name} `,
   }))
 
