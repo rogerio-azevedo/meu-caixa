@@ -41,7 +41,7 @@ const Guide = () => {
     {
       id: 7,
       date: 'Sexta - 28/07/2023 20:00',
-      description: 'Show com Maia',
+      description: 'Show com Maya Andrade',
     },
     {
       id: 8,
