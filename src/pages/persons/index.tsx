@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next/types'
 import { prisma } from '../../lib/prisma'
 import PageWrapper from '@/components/PageWrapper'
-import BottomMenu from '@/components/BottomMenu'
+import BottomAdmin from '@/components/BottomAdmin'
 
 export default function Persons({ persons }: any) {
   return (
@@ -42,7 +42,7 @@ export default function Persons({ persons }: any) {
           </div>
         </div>
 
-        <BottomMenu className="flex" />
+        <BottomAdmin className="flex" />
       </div>
     </PageWrapper>
   )
