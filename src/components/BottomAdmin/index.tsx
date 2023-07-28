@@ -56,7 +56,7 @@ const BottomAdmin = ({ bgColor, className }: WrapperProps) => {
 
         <div className="flex flex-col justify-center items-center">
           <Link
-            href="/guide"
+            href="/persons"
             className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
           >
             <FaCalculator size={18} color="#fff" />

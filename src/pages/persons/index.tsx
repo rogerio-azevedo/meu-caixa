@@ -6,41 +6,43 @@ import BottomMenu from '@/components/BottomMenu'
 export default function Persons({ persons }: any) {
   return (
     <PageWrapper>
-      <div className="flex w-full flex-col justify-between items-center py-8">
-        <div>
-          <h1 className="text-center mb-8">Listagem de Usuários</h1>
+      <div className=" flex flex-col w-full justify-between">
+        <div className="flex flex-1 flex-col px-4 mt-6">
+          <h1 className="text-2xl font-bold text-center">
+            Listagem de Usuários
+          </h1>
 
-          <div className="flex w-full text-sm">
-            <table className="table-fixed border border-slate-500">
-              <thead>
-                <tr>
-                  <th className="border-collapse border border-slate-500 px-4">
-                    Nome
-                  </th>
-                  <th className="border-collapse border border-slate-500 px-4">
-                    Documento
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {persons?.map((person: any) => (
-                  <tr key={person.id}>
-                    <td className="border-collapse border border-slate-500 px-4">
-                      {person.name}
-                    </td>
-                    <td className="border-collapse border border-slate-500  px-4">
-                      {person.document}
-                    </td>
+          <div className="flex max-h-[600px] px-4 mb-20 mt-6 pt-4">
+            <div className="h-full pt-2 overflow-y-auto">
+              <table className="table-fixed border border-slate-500">
+                <thead className="">
+                  <tr>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Nome
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Documento
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="">
+                  {persons?.map((person: any) => (
+                    <tr key={'person.id'} className="text-sm">
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {person.name}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {person.document}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div className="flex w-full">
-          <BottomMenu />
-        </div>
+        <BottomMenu className="flex" />
       </div>
     </PageWrapper>
   )
