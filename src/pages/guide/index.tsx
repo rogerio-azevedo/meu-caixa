@@ -105,17 +105,17 @@ const Guide = () => {
     },
     {
       id: 20,
-      date: 'Domingo - 29/07/2023 07:00',
+      date: 'Domingo - 30/07/2023 07:00',
       description: 'Café da manha',
     },
     {
       id: 21,
-      date: 'Domingo - 29/07/2023 09:30',
+      date: 'Domingo - 30/07/2023 09:30',
       description: 'Atividades',
     },
     {
       id: 22,
-      date: 'Domingo - 29/07/2023 12:00',
+      date: 'Domingo - 30/07/2023 12:00',
       description: 'Almoço',
     },
   ]
