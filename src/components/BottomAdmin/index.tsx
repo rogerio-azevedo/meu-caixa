@@ -1,12 +1,11 @@
 import classNames from 'classnames'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
   FaCalculator,
   FaBeer,
   FaHome,
   FaCashRegister,
-  FaLock,
+  FaCreditCard,
 } from 'react-icons/fa'
 
 type WrapperProps = {
@@ -66,11 +65,11 @@ const BottomAdmin = ({ bgColor, className }: WrapperProps) => {
 
         <div className="flex flex-col justify-center items-center">
           <Link
-            href="/admin"
+            href="/adminCredit"
             className="text-white text-sm mt-1 flex flex-col justify-center items-center gap-1"
           >
-            <FaLock size={18} color="#fff" />
-            Admin
+            <FaCreditCard size={18} color="#fff" />
+            Crédito
           </Link>
         </div>
       </div>
