@@ -9,7 +9,9 @@ export default async function handler(
     select: {
       id: true,
       name: true,
+      isAdmin: true,
     },
+    orderBy: { name: 'asc' },
   })
 
   res.status(200).json(persons)

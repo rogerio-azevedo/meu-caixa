@@ -1,6 +1,5 @@
 import BottomMenu from '@/components/BottomMenu'
 import PageWrapper from '@/components/PageWrapper'
-import { FaBeer } from 'react-icons/fa'
 import { ImSpoonKnife } from 'react-icons/im'
 import { GiWaterBottle } from 'react-icons/gi'
 

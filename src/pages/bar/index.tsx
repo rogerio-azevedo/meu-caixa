@@ -117,7 +117,7 @@ export default function Bar() {
       })
     }
 
-    let res = await fetch('/api/checkout', {
+    const res = await fetch('/api/checkout', {
       method: 'POST',
       body: JSON.stringify({
         personId: selectedPersonId,
