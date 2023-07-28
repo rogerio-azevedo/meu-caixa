@@ -96,7 +96,7 @@ export default function CheckIn() {
             <TextInput
               id="name"
               label="Nome"
-              placeholder="Nome"
+              placeholder="Nome + Sobrenome"
               register={register}
             />
           )}
