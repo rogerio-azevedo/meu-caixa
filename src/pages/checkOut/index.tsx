@@ -27,6 +27,8 @@ export default function CheckOut() {
     Record<string, { id: string; description: string; amount: number }>
   >({})
 
+  const [paid, setPaid] = useState(false)
+
   const [selectKey, setSelectKey] = useState(0)
 
   function clearSelect() {
@@ -69,6 +71,7 @@ export default function CheckOut() {
       body: JSON.stringify({
         personId: selectedPersonId,
         products: Object.values(productsToBuy),
+        paid,
       }),
     })
 
@@ -190,6 +193,16 @@ export default function CheckOut() {
             </div>
           ))}
         </div>
+
+        <label className="flex gap-2">
+          <input
+            type="checkbox"
+            className="accent-blue-500"
+            checked={paid}
+            onChange={e => setPaid(e.target.checked)}
+          />
+          Pagar todos
+        </label>
 
         <p className="px-4">
           Total adicionado:{' '}

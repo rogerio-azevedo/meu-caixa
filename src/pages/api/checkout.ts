@@ -12,9 +12,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>,
 ) {
-  const { personId, products } = JSON.parse(req.body) as {
+  const { paid, personId, products } = JSON.parse(req.body) as {
     personId: string
     products: Product[]
+    paid: boolean
   }
 
   let token = await getToken({ req })
@@ -34,6 +35,7 @@ export default async function handler(
           personId,
           productId: product.id,
           amount: product.amount,
+          paid,
 
           Log: {
             create: [
