@@ -27,9 +27,13 @@ type Credit = {
 type OptionType = { label: string; value: string }
 
 export default function ManageCredit() {
-  const [data, setData] = useState<any>()
+  const [data, setData] = useState<{
+    balance: {
+        [productId: string]: number;
+    }
+    credits: Credit[]
+  }>()
   const [persons, setPersons] = useState<Person[]>([])
-  const [selectKey, setSelectKey] = useState(0)
   const [selectedPersonId, setSelectedPersonId] = useState<string>()
 
   useEffect(() => {
@@ -60,7 +64,6 @@ export default function ManageCredit() {
 
           <div className="flex w-full px-4">
             <SelectPerson
-              key={selectKey}
               options={persons.map(person => ({
                 label: person.name,
                 value: person.id,
@@ -110,37 +113,25 @@ export default function ManageCredit() {
                 </tbody>
               </table>
 
-              <table className="table-fixed border border-slate-500">
+              <table className="table-fixed border border-slate-500  mt-4">
                 <thead className="">
                   <tr>
                     <th className="border-collapse border border-slate-500 px-4">
                       Produto
                     </th>
                     <th className="border-collapse border border-slate-500 px-4">
-                      Pessoa
-                    </th>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Qtde
-                    </th>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Pago
+                      Quantidade
                     </th>
                   </tr>
                 </thead>
                 <tbody className="">
-                  {data?.uses?.map((item: Credit) => (
-                    <tr key={item.id} className="text-sm text">
+                {Object.entries(data?.balance ?? {}).map(([productId, amount])=>(
+                    <tr key={productId} className="text-sm text">
                       <td className="border-collapse border border-slate-500 px-2">
-                        {item.product.description}
+                        {productId}
                       </td>
                       <td className="border-collapse border border-slate-500 px-2">
-                        {item.person.name}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {item.amount}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2 text-center">
-                        {item.paid ? 'Sim' : 'Não'}
+                        {amount}
                       </td>
                     </tr>
                   ))}
