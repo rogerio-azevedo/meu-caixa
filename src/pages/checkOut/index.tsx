@@ -143,8 +143,6 @@ export default function CheckOut() {
 
   const totalProductsPrice = getTotalProductsPrice()
 
-  //const [appStateVisible, setAppStateVisible] = useState(Date.now())
-
   return (
     <PageWrapper>
       <div className="flex flex-1 flex-col justify-between items-center gap-4">

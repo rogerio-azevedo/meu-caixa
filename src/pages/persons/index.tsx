@@ -1,5 +1,3 @@
-import { GetStaticProps } from 'next/types'
-import { prisma } from '../../lib/prisma'
 import { FaLock, FaLockOpen } from 'react-icons/fa'
 
 import PageWrapper from '@/components/PageWrapper'

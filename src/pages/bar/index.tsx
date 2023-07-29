@@ -35,8 +35,6 @@ export default function Bar() {
 
   const [selectKey, setSelectKey] = useState(0)
 
-  const totalProductsPrice = 1
-
   function clearSelect() {
     setSelectKey(selectKey + 1)
   }
