@@ -28,10 +28,13 @@ type OptionType = { label: string; value: string }
 
 export default function ManageCredit() {
   const [data, setData] = useState<{
-    balance: {
+    negativeBalance: {
         [productId: string]: number;
     }
-    credits: Credit[]
+    positiveCredits: Credit[]
+    totalBalance: {
+      [productId: string]: number;
+    }
   }>()
   const [persons, setPersons] = useState<Person[]>([])
   const [selectedPersonId, setSelectedPersonId] = useState<string>()
@@ -51,8 +54,6 @@ export default function ManageCredit() {
       setData(await res.json())
     })
   }, [selectedPersonId])
-
-  console.log(data)
 
   return (
     <PageWrapper>
@@ -76,7 +77,8 @@ export default function ManageCredit() {
 
           <div className="flex max-h-[600px] px-4 mb-20 mt-6 pt-4">
             <div className="h-full pt-2 overflow-y-auto">
-              <table className="table-fixed border border-slate-500">
+              <h1 className="text-xl font-bold text-center">Créditos positivos</h1>
+              <table className="table-fixed border border-slate-500 mb-4">
                 <thead className="">
                   <tr>
                     <th className="border-collapse border border-slate-500 px-4">
@@ -94,7 +96,7 @@ export default function ManageCredit() {
                   </tr>
                 </thead>
                 <tbody className="">
-                  {data?.credits?.map((item: Credit) => (
+                  {data?.positiveCredits?.map((item: Credit) => (
                     <tr key={item.id} className="text-sm text">
                       <td className="border-collapse border border-slate-500 px-2">
                         {item.product.description}
@@ -113,19 +115,46 @@ export default function ManageCredit() {
                 </tbody>
               </table>
 
-              <table className="table-fixed border border-slate-500  mt-4">
+              <h1 className="text-xl font-bold text-center">Saldo negativo</h1>
+              <table className="table-fixed border border-slate-500">
                 <thead className="">
                   <tr>
                     <th className="border-collapse border border-slate-500 px-4">
                       Produto
                     </th>
                     <th className="border-collapse border border-slate-500 px-4">
-                      Quantidade
+                      Saldo
                     </th>
                   </tr>
                 </thead>
                 <tbody className="">
-                {Object.entries(data?.balance ?? {}).map(([productId, amount])=>(
+                {Object.entries(data?.negativeBalance ?? {}).map(([productId, amount])=>(
+                    <tr key={productId} className="text-sm text">
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {productId}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {amount}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <h1 className="text-xl font-bold text-center">Saldo total</h1>
+              <table className="table-fixed border border-slate-500">
+                <thead className="">
+                  <tr>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Produto
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Saldo
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="">
+                {Object.entries(data?.totalBalance ?? {}).map(([productId, amount])=>(
                     <tr key={productId} className="text-sm text">
                       <td className="border-collapse border border-slate-500 px-2">
                         {productId}

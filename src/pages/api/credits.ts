@@ -6,9 +6,8 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const personId = req.query.personId as string
-  console.log('🚀 ~ file: credits.ts:9 ~ personId:', personId)
 
-  const credits = await prisma.credit.findMany({
+  const positiveCredits = await prisma.credit.findMany({
     where: {
       personId,
       amount: { gt: 0 },
@@ -18,6 +17,14 @@ export default async function handler(
       product: true,
     },
   })
+
+  const formattedCredits = positiveCredits.map(use => ({
+    creditId: use.id,
+    amount: use.amount,
+    paid: use.paid,
+    person: use.person.name,
+    product: use.product.description,
+  }))
 
   const uses = await prisma.credit.findMany({
     where: {
@@ -38,23 +45,35 @@ export default async function handler(
     product: use.product.description,
   }))
 
-  const balance: { [productId: string]: number } = formattedUses.reduce(
-    (acumulador: any, pedido) => {
-      const { product, amount } = pedido
-      if (!acumulador[product]) {
-        acumulador[product] = 0
+  const negativeBalance = formattedUses.reduce((acumulador, pedido) => {
+    const { product, amount } = pedido
+    if (!acumulador[product]) {
+      acumulador[product] = 0
+    }
+    acumulador[product] += amount
+    return acumulador
+  }, {} as { [productId: string]: number })
+
+  const totalBalance = formattedCredits.reduce(
+    (acc, { product, amount }) => {
+      if (!acc[product]) {
+        acc[product] = 0
       }
-      acumulador[product] += amount
-      return acumulador
+
+      acc[product] += amount
+
+      return acc
     },
-    {},
+    formattedUses.reduce((acc, { product, amount }) => {
+      if (!acc[product]) {
+        acc[product] = 0
+      }
+
+      acc[product] += amount
+
+      return acc
+    }, {} as { [productId: string]: number }),
   )
 
-  console.log(balance)
-
-  //console.log('🚀 ~ file: credits.ts:29 ~ uses:', uses)
-
-  //console.log('🚀 ~ file: credits.ts:15 ~ formattedUses:', formattedUses)
-
-  res.status(200).json({ credits, uses, balance })
+  res.status(200).json({ positiveCredits, totalBalance, negativeBalance })
 }
