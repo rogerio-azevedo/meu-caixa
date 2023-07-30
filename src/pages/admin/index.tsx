@@ -9,11 +9,14 @@ interface ConsumedProduct {
 }
 
 const Admin = () => {
-  const [consumedProducts, setConsumedProducts] = useState<ConsumedProduct[]>()
+  const [consumedProducts, setConsumedProducts] = useState<any>()
+  const [consumed, setConsumed] = useState<any>()
 
   useEffect(() => {
     fetch('/api/consumedProducts').then(async res => {
-      setConsumedProducts(await res.json())
+      const data = await res?.json()
+      setConsumedProducts(data?.balance)
+      setConsumed(data?.consumed)
     })
   }, [])
 
@@ -26,13 +29,43 @@ const Admin = () => {
           </h1>
           <div className="text-center">
             {consumedProducts &&
-              consumedProducts.map(product => (
+              consumedProducts.map((product: any) => (
                 <div key={product.id}>
                   <p>
                     {product.description} : {product.amount ?? 0}
                   </p>
                 </div>
               ))}
+          </div>
+
+          <div className="h-full pt-2 overflow-y-auto">
+            <table className="table-fixed border border-slate-500">
+              <thead className="">
+                <tr>
+                  <th className="border-collapse border border-slate-500 px-4">
+                    Nome
+                  </th>
+                  <th className="border-collapse border border-slate-500 px-4">
+                    Admin
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {consumed?.map((data: any, index: any) => (
+                  <tr key={index} className="text-sm text">
+                    <td className="border-collapse border border-slate-500 px-2">
+                      {data.person}
+                    </td>
+                    <td className="border-collapse border border-slate-500 px-2">
+                      {data.consumo.toLocaleString('pt-br', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
