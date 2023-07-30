@@ -68,5 +68,7 @@ export default async function handler(
     return { person, consumo }
   })
 
-  res.status(200).json({ balance, consumed })
+  const ordered = consumed.sort((a, b) => a.person.localeCompare(b.person))
+
+  res.status(200).json({ balance, consumed: ordered })
 }

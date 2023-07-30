@@ -38,7 +38,7 @@ const Admin = () => {
               ))}
           </div>
 
-          <div className="h-full pt-2 overflow-y-auto">
+          <div className="flex h-full pt-2 justify-center items-center">
             <table className="table-fixed border border-slate-500">
               <thead className="">
                 <tr>
@@ -46,7 +46,7 @@ const Admin = () => {
                     Nome
                   </th>
                   <th className="border-collapse border border-slate-500 px-4">
-                    Admin
+                    Consumo
                   </th>
                 </tr>
               </thead>
