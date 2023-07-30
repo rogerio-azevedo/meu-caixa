@@ -7,25 +7,6 @@ export default async function handler(
 ) {
   const personId = req.query.personId as string
 
-  const positiveCredits = await prisma.credit.findMany({
-    where: {
-      personId,
-      amount: { gt: 0 },
-    },
-    include: {
-      person: true,
-      product: true,
-    },
-  })
-
-  const formattedCredits = positiveCredits.map(use => ({
-    creditId: use.id,
-    amount: use.amount,
-    paid: use.paid,
-    person: use.person.name,
-    product: use.product.description,
-  }))
-
   const uses = await prisma.credit.findMany({
     where: {
       personId,
@@ -54,26 +35,5 @@ export default async function handler(
     return acumulador
   }, {} as { [productId: string]: number })
 
-  const totalBalance = formattedCredits.reduce(
-    (acc, { product, amount }) => {
-      if (!acc[product]) {
-        acc[product] = 0
-      }
-
-      acc[product] += amount
-
-      return acc
-    },
-    formattedUses.reduce((acc, { product, amount }) => {
-      if (!acc[product]) {
-        acc[product] = 0
-      }
-
-      acc[product] += amount
-
-      return acc
-    }, {} as { [productId: string]: number }),
-  )
-
-  res.status(200).json({ positiveCredits, totalBalance, negativeBalance })
+  res.status(200).json(negativeBalance)
 }

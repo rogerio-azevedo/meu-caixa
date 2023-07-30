@@ -18,30 +18,52 @@ interface Log {
   description: string
 }
 
+interface Product {
+  id: string
+  description: string
+  price: number
+}
+
 export default function Credit() {
   const [logs, setLogs] = useState<Log[]>()
-  const [balance, setBalance] = useState<Balance[]>()
+  const [products, setProducts] = useState<Product[]>();
+  const [negativeBalance, setNegativeBalance] = useState<{
+    [productId: string]: number;
+  }>()
+
   const { data } = useSession()
 
   function refresh() {
     if (!data) return
-
-    fetch(`/api/balance?personId=${data.user.id}`, {
-      method: 'GET',
-    }).then(async res => {
-      setBalance(await res.json())
-    })
 
     fetch(`/api/logs?personId=${data.user.id}`, {
       method: 'GET',
     }).then(async res => {
       setLogs(await res.json())
     })
+
+    fetch(`/api/credits?personId=${data.user.id}`).then(async res => {
+      setNegativeBalance((await res.json()))
+    })
   }
 
   useEffect(() => {
+    fetch('/api/products').then(async res => {
+      setProducts(await res.json())
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!data) return;
+
     refresh()
   }, [data]) // eslint-disable-line
+
+  const totalToPay =  Object.entries(negativeBalance ?? {}).reduce((acc, [productName, amount])=>{
+    const price = (products?.find((p)=>p.description==productName)?.price ?? 0)
+
+    return acc + (price * amount)
+  }, 0)
 
   return (
     <PageWrapper>
@@ -50,15 +72,62 @@ export default function Credit() {
           <div className="flex flex-col w-full mt-6 justify-center">
             <h1 className="text-2xl font-bold text-center"> Meu Crédito</h1>
 
-            <div className="flex flex-row w-full justify-between mt-6">
-              <div className="">
-                {balance?.map(({ id, amount, product }) => (
-                  <p key={id}>
-                    <span>{product}</span>:
-                    <span className="font-bold ml-2">{amount}</span>
-                  </p>
-                ))}
-              </div>
+            <div className="flex flex-col w-full justify-between items-center mt-6">
+              <table className="table-fixed border border-slate-500">
+                <thead className="">
+                  <tr>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Produto
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Saldo
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Preço unitário
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Preço total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="">
+                {Object.entries(negativeBalance ?? {}).map(([productName, amount])=>(
+                    <tr key={productName} className="text-sm text">
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {productName}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {amount}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0) * Math.abs(amount)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className='py-2'>
+                Total: {" "}
+                <strong>
+                {totalToPay.toLocaleString("pt-br", {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+                </strong>
+              </p>
 
               <div>
                 <button
@@ -72,7 +141,7 @@ export default function Credit() {
           </div>
         </div>
 
-        <div className="h-1/2 px-4 mb-24">
+        <div className="h-1/3 px-4 mb-24">
           <h2 className="text-xl font-bold text-center mb-6">
             Histórico de transações
           </h2>

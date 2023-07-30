@@ -8,20 +8,10 @@ type Person = {
   name: string
 }
 
-type Product = {
+interface Product {
   id: string
   description: string
-}
-
-type Credit = {
-  id: string
-  amount: number
-  productId: string
-  personId: string
-  paid: boolean
-
-  product: Product
-  person: Person
+  price: number
 }
 
 type OptionType = { label: string; value: string }
@@ -31,17 +21,18 @@ export default function ManageCredit() {
     negativeBalance: {
         [productId: string]: number;
     }
-    positiveCredits: Credit[]
-    totalBalance: {
-      [productId: string]: number;
-    }
   }>()
+  const [products, setProducts] = useState<Product[]>();
   const [persons, setPersons] = useState<Person[]>([])
   const [selectedPersonId, setSelectedPersonId] = useState<string>()
 
   useEffect(() => {
     fetch('/api/persons').then(async res => {
       setPersons(await res.json())
+    })
+
+    fetch('/api/products').then(async res => {
+      setProducts(await res.json())
     })
   }, [])
 
@@ -77,44 +68,6 @@ export default function ManageCredit() {
 
           <div className="flex max-h-[600px] px-4 mb-20 mt-6 pt-4">
             <div className="h-full pt-2 overflow-y-auto">
-              <h1 className="text-xl font-bold text-center">Créditos positivos</h1>
-              <table className="table-fixed border border-slate-500 mb-4">
-                <thead className="">
-                  <tr>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Produto
-                    </th>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Pessoa
-                    </th>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Qtde
-                    </th>
-                    <th className="border-collapse border border-slate-500 px-4">
-                      Pago
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="">
-                  {data?.positiveCredits?.map((item: Credit) => (
-                    <tr key={item.id} className="text-sm text">
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {item.product.description}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {item.person.name}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {item.amount}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2 text-center">
-                        {item.paid ? 'Sim' : 'Não'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
               <h1 className="text-xl font-bold text-center">Saldo negativo</h1>
               <table className="table-fixed border border-slate-500">
                 <thead className="">
@@ -125,42 +78,38 @@ export default function ManageCredit() {
                     <th className="border-collapse border border-slate-500 px-4">
                       Saldo
                     </th>
-                  </tr>
-                </thead>
-                <tbody className="">
-                {Object.entries(data?.negativeBalance ?? {}).map(([productId, amount])=>(
-                    <tr key={productId} className="text-sm text">
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {productId}
-                      </td>
-                      <td className="border-collapse border border-slate-500 px-2">
-                        {amount}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <h1 className="text-xl font-bold text-center">Saldo total</h1>
-              <table className="table-fixed border border-slate-500">
-                <thead className="">
-                  <tr>
                     <th className="border-collapse border border-slate-500 px-4">
-                      Produto
+                      Preço unitário
                     </th>
                     <th className="border-collapse border border-slate-500 px-4">
-                      Saldo
+                      Preço total
                     </th>
                   </tr>
                 </thead>
                 <tbody className="">
-                {Object.entries(data?.totalBalance ?? {}).map(([productId, amount])=>(
-                    <tr key={productId} className="text-sm text">
+                {Object.entries(data?.negativeBalance ?? {}).map(([productName, amount])=>(
+                    <tr key={productName} className="text-sm text">
                       <td className="border-collapse border border-slate-500 px-2">
-                        {productId}
+                        {productName}
                       </td>
                       <td className="border-collapse border border-slate-500 px-2">
                         {amount}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0) * Math.abs(amount)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
                       </td>
                     </tr>
                   ))}

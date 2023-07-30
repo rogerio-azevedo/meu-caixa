@@ -24,12 +24,18 @@ interface Log {
   description: string
 }
 
+interface Product {
+  id: string
+  description: string
+  price: number
+}
+
 type OptionType = { label: string; value: string }
 
 export default function Credit() {
   const [logs, setLogs] = useState<Log[]>()
-  const [balance, setBalance] = useState<Balance[]>()
 
+  const [products, setProducts] = useState<Product[]>();
   const [persons, setPersons] = useState<Person[]>([])
   const [selectedPersonId, setSelectedPersonId] = useState<string>()
 
@@ -37,18 +43,16 @@ export default function Credit() {
 
   const [selectKey, setSelectKey] = useState(0)
 
+  const [negativeBalance, setNegativeBalance] = useState<{
+    [productId: string]: number;
+  }>()
+
   function clearSelect() {
     setSelectKey(selectKey + 1)
   }
 
   function refresh() {
     if (!selectedPersonId) return
-
-    fetch(`/api/balance?personId=${selectedPersonId}`, {
-      method: 'GET',
-    }).then(async res => {
-      setBalance(await res.json())
-    })
 
     fetch(`/api/logs?personId=${selectedPersonId}`, {
       method: 'GET',
@@ -61,61 +65,76 @@ export default function Credit() {
     }).then(async res => {
       setUnpaidCreditAmount(await res.json())
     })
+
+    fetch(`/api/credits?personId=${selectedPersonId}`).then(async res => {
+      setNegativeBalance((await res.json()))
+    })
   }
 
-  async function payAll() {
-    if (!selectedPersonId) {
-      return Toast({
-        isSuccessToast: false,
-        message: 'Selecione uma pessoa primeiro',
-        time: 2000,
-      })
-    }
+  // async function payAll() {
+  //   if (!selectedPersonId) {
+  //     return Toast({
+  //       isSuccessToast: false,
+  //       message: 'Selecione uma pessoa primeiro',
+  //       time: 2000,
+  //     })
+  //   }
 
-    const res = await fetch('/api/payCredits', {
-      method: 'PUT',
-      body: JSON.stringify({
-        personId: selectedPersonId,
-      }),
+  //   const res = await fetch('/api/payCredits', {
+  //     method: 'PUT',
+  //     body: JSON.stringify({
+  //       personId: selectedPersonId,
+  //     }),
+  //   })
+
+  //   if (res.ok) {
+  //     setSelectedPersonId(undefined)
+  //     setLogs(undefined)
+  //     setUnpaidCreditAmount(undefined)
+  //     clearSelect()
+
+  //     return Toast({
+  //       isSuccessToast: true,
+  //       message: 'Todos os créditos pagos com sucesso',
+  //       time: 2000,
+  //     })
+  //   } else {
+  //     return Toast({
+  //       isSuccessToast: false,
+  //       message: 'Erro',
+  //       time: 2000,
+  //     })
+  //   }
+  // }
+  
+  useEffect(() => {
+    fetch('/api/products').then(async res => {
+      setProducts(await res.json())
     })
 
-    if (res.ok) {
-      setSelectedPersonId(undefined)
-      setBalance(undefined)
-      setLogs(undefined)
-      setUnpaidCreditAmount(undefined)
-      clearSelect()
-
-      return Toast({
-        isSuccessToast: true,
-        message: 'Todos os créditos pagos com sucesso',
-        time: 2000,
-      })
-    } else {
-      return Toast({
-        isSuccessToast: false,
-        message: 'Erro',
-        time: 2000,
-      })
-    }
-  }
-
-  useEffect(() => {
     fetch('/api/persons').then(async res => {
       setPersons(await res.json())
     })
   }, [])
 
   useEffect(() => {
+    if (!selectedPersonId) return;
+
     refresh()
   }, [selectedPersonId]) // eslint-disable-line
 
+  const totalToPay =  Object.entries(negativeBalance ?? {}).reduce((acc, [productName, amount])=>{
+    const price = (products?.find((p)=>p.description==productName)?.price ?? 0)
+
+    return acc + (price * amount)
+  }, 0)
+
   return (
     <PageWrapper>
-      <div className="flex w-full flex-col justify-between">
+      <div className="flex w-full h-full flex-col">
         <div className="flex items-center px-4">
-          <div className="flex flex-col w-full mt-6 mb-6 justify-center">
-            <h1 className="text-2xl font-bold text-center mb-4">
+          <div className="flex flex-col w-full justify-center">
+            <h1 className="text-2xl font-bold text-center">
               Crédito da Pessoa
             </h1>
 
@@ -132,17 +151,66 @@ export default function Credit() {
               />
             </div>
 
-            <div className="flex flex-row w-full justify-between mt-6">
-              <div className="">
-                {balance?.map(({ id, amount, product }) => (
-                  <p key={id}>
-                    <span>{product}</span>:
-                    <span className="font-bold ml-2">{amount}</span>
-                  </p>
-                ))}
+            <div className="flex flex-col w-full justify-between mt-2 items-center">
+              <div className="flex flex-col items-center">
+                <table className="table-fixed border border-slate-500">
+                <thead className="">
+                  <tr>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Produto
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Saldo
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Preço unitário
+                    </th>
+                    <th className="border-collapse border border-slate-500 px-4">
+                      Preço total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="">
+                {Object.entries(negativeBalance ?? {}).map(([productName, amount])=>(
+                    <tr key={productName} className="text-sm text">
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {productName}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {amount}
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
+                      </td>
+                      <td className="border-collapse border border-slate-500 px-2">
+                        {
+                          ((products?.find((p)=>p.description==productName)?.price ?? 0) * Math.abs(amount)).toLocaleString("pt-br", {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                </table>
+                <p className='py-2'>
+                  Total: {" "}
+                  <strong>
+                  {totalToPay.toLocaleString("pt-br", {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                  </strong>
+                </p>
               </div>
 
-              <div>
+              <div className='mb-2'>
                 <button
                   onClick={refresh}
                   className="flex justify-center items-center bg-blue-500 p-2 rounded-md"
@@ -154,8 +222,8 @@ export default function Credit() {
           </div>
         </div>
 
-        <div className="h-1/3 px-4 mb-24">
-          <h2 className="text-xl font-bold text-center mb-6">
+        <div className="h-1/3 px-4 mb-8">
+          <h2 className="text-xl font-bold text-center">
             Histórico de transações
           </h2>
           <ol className="relative border-l border-gray-200 dark:border-gray-700 overflow-y-scroll h-full pt-2">
@@ -174,8 +242,8 @@ export default function Credit() {
         </div>
 
         <div className="flex flex-col gap-4 w-full">
-          <div className="px-4">
-            <button
+          {/* <div className="px-4"> */}
+            {/* <button
               className="w-full bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={payAll}
             >
@@ -185,8 +253,8 @@ export default function Credit() {
                 currency: 'BRL',
               }) ?? 0}
               )
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
 
           <BottomAdmin className="flex" />
         </div>
